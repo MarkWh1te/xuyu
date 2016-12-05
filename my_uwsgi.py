@@ -22,9 +22,14 @@ class WSGIServer(object):
         # Activate
         listen_socket.listen(self.request_queue_size)
         # Get server host name and port
+
+        # print listen_socket.getsockname()
         host, port = self.listen_socket.getsockname()[:2]
+
         self.server_name = socket.getfqdn(host)
         self.server_port = port
+
+        print self.server_name,self.server_port
         # Return headers set by Web framework/Web application
         self.headers_set = []
 
