@@ -1,0 +1,29 @@
+version: "2"
+
+services:
+  redis:
+    image: redis:latest
+
+  interface:
+    build: .
+    command: daphne -b 0.0.0.0 -p 8000 serverstatus.asgi:application
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    links:
+      - redis
+    environment:
+      - DJANGO_SECRET_KEY
+
+  # worker:
+  #   build: .
+  #   command: python manage.py runworker channel
+  #   volumes:
+  #     - .:/code
+  #   links:
+  #     - redis
+  #   environment:
+  #     - DJANGO_SECRET_KEY
+
+    

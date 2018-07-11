@@ -20,10 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '11x^er+9*y%nm%61fk#5ga682(j)+gs$(2k7^)!a8fe5+oy#_m'
+CUSTOM_SECRET_KEY = "4242424242"
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', CUSTOM_SECRET_KEY)
+DEBUG = False
+if SECRET_KEY == CUSTOM_SECRET_KEY:
+    DEBUG = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -123,11 +126,15 @@ STATIC_URL = '/static/'
 
 # django channles
 ASGI_APPLICATION = 'serverstatus.routing.application'
+
+# use redis as channel back end
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
+print(f"redis_host is {redis_host}")
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [(redis_host, 6379)],
         },
     },
 }
